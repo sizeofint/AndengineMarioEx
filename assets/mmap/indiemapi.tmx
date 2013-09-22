@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="16" height="16" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="test" tilewidth="32" tileheight="32">
+  <image source="mmap/test.png" width="228" height="224"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDFUgSyEGAEGgAdE=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="16" height="16">
+  <object x="-1" y="482" width="513" height="11"/>
+ </objectgroup>
+</map>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="16" height="16" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="terain" tilewidth="32" tileheight="32">
+  <image source="terain.png" width="512" height="512"/>
+  <tile id="81">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="82">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="83">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="97">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="98">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="99">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="100">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+  <tile id="113">
+   <properties>
+    <property name="front" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="257" name="collisions" tilewidth="32" tileheight="32">
+  <image source="collisions.png" width="32" height="32"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJwtzFMYFgYAAMA/Y5nLtlu2bfdl27Zt27btLRtry7Zt3UMP93pBAoFAUIIRnBCEJBShCUNY/iAc4YlARCIRmShEJRrRiUFM/iQWsYlDXOIRnwQkJBGJSUJSkpGcFKQkFalJQ1rSkZ4MZCQTmfmLLGQlG9nJQU5ykZs85CUf+SlAQQpRmCIUpRjFKUFJSlGaMpSlHOWpQEUqUZkqVKUa1alBTdpSi9rUoS71qE8DGtKIxjShKc1oTgta0orWtPn9taM9HehIJzrTha50ozs96EkvetOHvvSjPwMYyCAGM4ShDGM4IxjJKEYzhrGMYzwTmMgkJjOFqUxjOjOYySxmM4e5zGM+C1jIIhazhKUsYzkrWMkqVrOGtaxjPRvYyCY2s4WtbGM7O9jJLnazh73sYz8H+Jt/OMghDnOEoxzjOCc4ySlOc4aznOM8F/iXi/zH/1ziMle4yjWuc4Ob3OI2d7jLPe7zgIc84jFPeMoznvOCl7ziNW94yzve84GPfOIzX/jKN77zg58EggQCvwDqR3+W
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="16" height="16">
+  <object x="38" y="225" width="185" height="109"/>
+  <object x="336" y="145">
+   <polyline points="0,0 96,46 177,14"/>
+  </object>
+ </objectgroup>
+</map>

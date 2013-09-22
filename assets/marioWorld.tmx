@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="21" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="t" tilewidth="32" tileheight="32">
+  <image source="mmap/tileset1.png" width="416" height="128"/>
+ </tileset>
+ <layer name="BG" width="100" height="21">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6GTU/8KZ2MPSFg1VVVVVVVVVdVHDzm1SDA=
+  </data>
+ </layer>
+ <layer name="OBJS" width="100" height="21">
+  <data encoding="base64" compression="zlib">
+   eJztlwlPAyEQhalXdU3Uaj0Sb1sT6v//gX1N2gTHAYZjWVj3JV92y3KEeTBQpSbVqJkBV26rx7Xj3rVjjEl/RWOojadWv+OvSbkmfdB2tC8bB5nvylHu6qN1cWuarm1a7/A7xg+qUD+08ezLjytwDW7AInPfPpm5hMaX+iHJV9QPX76SxFXiWU49gxfwCt4i2qf4acbI5wdtJ9kfNMdRSf2Yg3Nw4ZxNHUrx04w9jV3oeW624/aGL+/Hnh8uDZl7UuSboyQmvnM7x/kR+j019wwp17xK+cHlpdh91bpC/ODK+twfNfhROveV8IPGs+98JZUk1rlyn9RXnx+SdSrFdl+KGSOHSt5xWznTYvNBDXeoEjEuPU/JnLo9oe3GIOk8S/nWKd6PMShnDG2+HTHEqlNxfuzOl7MAhro7t7THqRehfswCGOt/mVzivJj84HUL7hLqL8E9eACP4Mko38XF5sV/9mMDfizf3sFHQF+0/if4AiuwBt/7cp8X1I9jcAJOmTFb8eNyoiq2/qUx9g==
+  </data>
+ </layer>
+ <objectgroup name="Unwalkable" width="100" height="21">
+  <object x="1286" y="610" width="244" height="24"/>
+  <object x="1318" y="580" width="212" height="22"/>
+  <object x="1348" y="548" width="184" height="22"/>
+  <object x="1380" y="516" width="154" height="24"/>
+  <object x="1410" y="482" width="122" height="26"/>
+  <object x="1444" y="450" width="86" height="26"/>
+  <object x="1476" y="418" width="54" height="26"/>
+  <object x="941" y="596" width="35" height="48"/>
+  <object x="938" y="577" width="40" height="17"/>
+  <object x="801" y="481" width="158" height="31"/>
+  <object x="557" y="595" width="36" height="49"/>
+  <object x="555" y="578" width="41" height="17"/>
+  <object name="ground" x="1" y="640" width="3203" height="31"/>
+  <object name="rightwall" x="3190" y="1" width="9" height="669"/>
+  <object name="leftwall" x="0" y="-4" width="7" height="674"/>
+  <object x="1025" y="354" width="93" height="29"/>
+  <object x="1216" y="256" width="96" height="33"/>
+  <object x="1408" y="159" width="95" height="32"/>
+  <object x="1888" y="480" width="351" height="160"/>
+  <object name="sky" x="3" y="1" width="3196" height="7"/>
+ </objectgroup>
+</map>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="80" height="21" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="mmap/newshp.shp.000000.png" tilewidth="32" tileheight="32">
+  <image source="mmap/newshp.shp.000000.png" trans="ff00ff" width="228" height="224"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="80" height="21">
+  <data encoding="base64" compression="zlib">
+   eJztwzEJAAAMA7AaqX+bFbFvJJAEAAAAAADgl3o61qsJEQ==
+  </data>
+ </layer>
+ <objectgroup name="physics" width="80" height="21">
+  <object x="2" y="643" width="223" height="9"/>
+  <object x="258" y="640" width="514" height="11"/>
+ </objectgroup>
+</map>
