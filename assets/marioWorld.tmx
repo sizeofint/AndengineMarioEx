@@ -10,7 +10,7 @@
  </layer>
  <layer name="OBJS" width="100" height="21">
   <data encoding="base64" compression="zlib">
-   eJztlwlPAyEQhalXdU3Uaj0Sb1sT6v//gX1N2gTHAYZjWVj3JV92y3KEeTBQpSbVqJkBV26rx7Xj3rVjjEl/RWOojadWv+OvSbkmfdB2tC8bB5nvylHu6qN1cWuarm1a7/A7xg+qUD+08ezLjytwDW7AInPfPpm5hMaX+iHJV9QPX76SxFXiWU49gxfwCt4i2qf4acbI5wdtJ9kfNMdRSf2Yg3Nw4ZxNHUrx04w9jV3oeW624/aGL+/Hnh8uDZl7UuSboyQmvnM7x/kR+j019wwp17xK+cHlpdh91bpC/ODK+twfNfhROveV8IPGs+98JZUk1rlyn9RXnx+SdSrFdl+KGSOHSt5xWznTYvNBDXeoEjEuPU/JnLo9oe3GIOk8S/nWKd6PMShnDG2+HTHEqlNxfuzOl7MAhro7t7THqRehfswCGOt/mVzivJj84HUL7hLqL8E9eACP4Mko38XF5sV/9mMDfizf3sFHQF+0/if4AiuwBt/7cp8X1I9jcAJOmTFb8eNyoiq2/qUx9g==
+   eJztl4luwyAQREnPxJV6pmml3pdE+/8f2ImUSHS7wC5gjC2P9GQHGyxmzOIYM6tFLRy4dt99XD/u3AaeMeu/qIfWOVrz139L2i0Zg/ajY/nYyz03gfbQGGMX907Td5vet/+dkgeVNg/rHPvK4xxcgEtwVXjsmNxaQv2leUjqFc0jVq8kvkoyK6kH8AiewHNC/5w8XY9iedB+kvVBaxyVNI9TsASr4GzaUE6ervfUO+1+7vbj1kas7qfuHyENWXtyFJujxJPYvl1i/9Bez609Qyo0r1p5cHUpdV2NXZo8uLY+10cLedSufTXyoH72Xa+kknhdqvZJc43lIXlPpfi+l1KeUUI1v3HHsqel1oMWvqFqeFx7npI5dTu0/aYg6Txr5dYZPo8pqKSHvtwOGFLVmbQ8tvvLiYKhvp3HtMZpFto8Fgqm+l+mlLgs5jx4XYObjPvX4BZswB24d9q3vviyaCkPrQe5+gY/nmsv4FUxFr3/DbyDD/AJvnbtsSxoHofgCBwzz+w7D60HPp3NNMUv8BgyWg==
   </data>
  </layer>
  <objectgroup name="Unwalkable" width="100" height="21">
@@ -34,5 +34,7 @@
   <object x="1408" y="159" width="95" height="32"/>
   <object x="1888" y="480" width="351" height="160"/>
   <object name="sky" x="3" y="1" width="3196" height="7"/>
+  <object x="2638" y="598" width="34" height="41"/>
+  <object x="2635" y="576" width="40" height="21"/>
  </objectgroup>
 </map>

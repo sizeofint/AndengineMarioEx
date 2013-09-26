@@ -1,7 +1,10 @@
 package com.febi.games;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
@@ -14,6 +17,7 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.MoveModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.util.FPSLogger;
@@ -38,6 +42,7 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
+import org.andengine.util.color.Color;
 import org.andengine.util.debug.Debug;
 
 import android.util.Log;
@@ -53,9 +58,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 //import org.andengine.engine.camera.hud.controls.DigitalOnScreenControl;
 
+
 //import org.andengine.examples.EaseFunctionExample;
 
+
 public class Game extends SimpleBaseGameActivity implements ContactListener {
+
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -77,6 +85,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas hopButtonAtlas;
 	private TextureRegion tiledTextureHop;
 	/* Hop Button */
+	
 
 	private ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
 
@@ -101,6 +110,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private TextureRegion tiledTextureleftarrow;
 	private BitmapTextureAtlas rightarrowButtonAtlas;
 	private TextureRegion tiledTexturerightarrow;
+	private Music mMusic;
 
 	@Override
 	public EngineOptions onCreateEngineOptions() {
@@ -111,7 +121,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(
 						CAMERA_WIDTH, CAMERA_HEIGHT), this.mBoundChaseCamera);
 		engineOptions.getTouchOptions().setNeedsMultiTouch(true);
-
+		engineOptions.getAudioOptions().setNeedsMusic(true);
 		if (MultiTouch.isSupported(this)) {
 			if (MultiTouch.isSupportedDistinct(this)) {
 				Toast.makeText(
@@ -177,6 +187,14 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		this.hopButtonAtlas.load();
 		/* Hop button */
 
+		try {
+			this.mMusic = MusicFactory.createMusicFromAsset(
+					this.mEngine.getMusicManager(), this, "track1.ogg");
+			this.mMusic.setLooping(true);
+		} catch (final IOException e) {
+			Debug.e(e);
+		}
+
 	}
 
 	@Override
@@ -184,6 +202,9 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 
 		scene = new Scene();
+		
+		scene.setBackground(new Background(0.18f, 0.74f, 0.98f));
+		scene.setBackgroundEnabled(true);
 
 		final HUD hud = new HUD();
 
@@ -195,7 +216,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		mPhysicsWorld.setAutoClearForces(true);
 
 		scene.registerUpdateHandler(this.mPhysicsWorld);
-
+		
 		try {
 			final TMXLoader tmxLoader = new TMXLoader(this.getAssets(),
 					this.mEngine.getTextureManager(),
@@ -228,6 +249,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		player = new AnimatedSprite(200, 400, this.mPlayerTextureRegion,
 				this.getVertexBufferObjectManager());
 		this.mBoundChaseCamera.setChaseEntity(player);
+		
+		this.mMusic.play();
 
 		final PhysicsHandler physicsHandler = new PhysicsHandler(player);
 
@@ -240,6 +263,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent,
 					final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+				Log.v("FEBI", "HOP TUCH!!!!");
 				if (pSceneTouchEvent.isActionDown()) {
 
 					Game.this.makeJump();
@@ -327,7 +351,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		this.mBoundChaseCamera.setHUD(hud);
 
 		final FixtureDef playerFixtureDef = PhysicsFactory.createFixtureDef(
-				10f, 0f, 0f);
+				0f, 0f, 0f);
 		mPlayerBody = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player,
 				BodyType.DynamicBody, playerFixtureDef);
 
@@ -446,14 +470,15 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	}
 
 	private void makeJump() {
+		Log.v("FEBI", "JUMPING!!!!");
 		// Log.v("FEBI", String.valueOf(isPlayerJuming));
 		if (true) {
 			if (lastdirection == PlayerDirection.RIGHT)
 				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x + 5, -5));
+						.getLinearVelocity().x + 5, -10));
 			else if (lastdirection == PlayerDirection.LEFT)
 				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x - 5, -5));
+						.getLinearVelocity().x - 5, -10));
 		}
 
 	}
@@ -462,7 +487,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	public void beginContact(final Contact contact) {
 		// TODO Auto-generated method stub
 
-		Log.v("FEBI", "beginContact()");
+		//Log.v("FEBI", "beginContact()");
 
 		Sprite a, b;
 		if ((a = (Sprite) contact.getFixtureA().getBody().getUserData()) != null)
