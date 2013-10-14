@@ -42,7 +42,6 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegion
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
-import org.andengine.util.color.Color;
 import org.andengine.util.debug.Debug;
 
 import android.util.Log;
@@ -54,13 +53,13 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 //import org.andengine.engine.camera.hud.controls.DigitalOnScreenControl;
 
-
 //import org.andengine.examples.EaseFunctionExample;
-
 
 public class Game extends SimpleBaseGameActivity implements ContactListener {
 
@@ -85,7 +84,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas hopButtonAtlas;
 	private TextureRegion tiledTextureHop;
 	/* Hop Button */
-	
 
 	private ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
 
@@ -103,6 +101,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	public enum PlayerDirection {
 		LEFT, RIGHT, DOWN, UP, NONE;
 	}
+	private Boolean enableJumping=true;
 
 	PlayerDirection lastdirection = PlayerDirection.UP;
 
@@ -111,7 +110,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas rightarrowButtonAtlas;
 	private TextureRegion tiledTexturerightarrow;
 	private Music mMusic;
-
+	private int numFootContacts=0;
+	
 	@Override
 	public EngineOptions onCreateEngineOptions() {
 
@@ -181,8 +181,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		this.hopButtonAtlas = new BitmapTextureAtlas(this.getTextureManager(),
 				96, 96, TextureOptions.BILINEAR);
 		this.tiledTextureHop = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.hopButtonAtlas, this, "hopbutton.png", 0,
-						0);
+				.createFromAsset(this.hopButtonAtlas, this, "jumpbutton.png",
+						0, 0);
 
 		this.hopButtonAtlas.load();
 		/* Hop button */
@@ -202,7 +202,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 
 		scene = new Scene();
-		
+
 		scene.setBackground(new Background(0.18f, 0.74f, 0.98f));
 		scene.setBackgroundEnabled(true);
 
@@ -216,7 +216,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		mPhysicsWorld.setAutoClearForces(true);
 
 		scene.registerUpdateHandler(this.mPhysicsWorld);
-		
+
 		try {
 			final TMXLoader tmxLoader = new TMXLoader(this.getAssets(),
 					this.mEngine.getTextureManager(),
@@ -250,6 +250,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				this.getVertexBufferObjectManager());
 		this.mBoundChaseCamera.setChaseEntity(player);
 		
+
 		this.mMusic.play();
 
 		final PhysicsHandler physicsHandler = new PhysicsHandler(player);
@@ -263,13 +264,15 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent,
 					final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-				Log.v("FEBI", "HOP TUCH!!!!");
+
 				if (pSceneTouchEvent.isActionDown()) {
-
-					Game.this.makeJump();
+					Log.v("FEBI", "HOP DOWN!!!!");
+					if(Game.this.numFootContacts>0)
+						Game.this.makeJump();
 				} else if (pSceneTouchEvent.isActionUp()) {
-
-					mPlayerBody.setLinearVelocity(0, 0);
+					Log.v("FEBI", "HOP UP!!!!");
+					//mPlayerBody.setLinearVelocity(0, 0);
+					//Game.this.playerIsjumping=false;
 				}
 				return true;
 			};
@@ -291,7 +294,9 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 						player.animate(new long[] { 100, 100, 100, 100, 100,
 								100, 100, 100, 100, 100 }, 10, 19, true);
 					// lastdirection = direction;
-
+					
+					
+					
 					mPlayerBody.setLinearVelocity(-1 * PLAYER_VELOCITY, 0);
 
 					// player.stopAnimation();
@@ -324,7 +329,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 						player.animate(new long[] { 100, 100, 100, 100, 100,
 								100, 100, 100, 100, 100 }, 0, 9, true);
 					// lastdirection = direction;
-
+					
 					mPlayerBody.setLinearVelocity(1 * PLAYER_VELOCITY, 0);
 
 					// player.stopAnimation();
@@ -350,11 +355,27 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 		this.mBoundChaseCamera.setHUD(hud);
 
-		final FixtureDef playerFixtureDef = PhysicsFactory.createFixtureDef(
-				0f, 0f, 0f);
+		final FixtureDef playerFixtureDef = PhysicsFactory.createFixtureDef(0f,
+				0f, 0f);
+		
+		
+		
+		
 		mPlayerBody = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player,
 				BodyType.DynamicBody, playerFixtureDef);
-
+	
+		//mPlayerBody.setUserData("PlayerBody");
+		
+		final PolygonShape mPoly = new PolygonShape();
+		mPoly.setAsBox(.1f,.1f, new Vector2(0,.5f),0);
+		final FixtureDef pFixtureDef = PhysicsFactory.createFixtureDef(0f, 0f, 0f,true); //not physic feet
+		pFixtureDef.shape = mPoly;
+		Fixture mFeet = mPlayerBody.createFixture(pFixtureDef);
+		mFeet.setUserData("PlayerFeet");
+		
+		mPoly.dispose();
+		
+		
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(
 				player, mPlayerBody, true, false) {
 			@Override
@@ -410,6 +431,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 			}
 		});
+		//scene.attachChild(new DebugRenderer(mPhysicsWorld, getVertexBufferObjectManager()));
 
 		return scene;
 	}
@@ -438,6 +460,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				final Rectangle rect = new Rectangle(object.getX(),
 						object.getY(), object.getWidth(), object.getHeight(),
 						this.getVertexBufferObjectManager());
+				
+				
 
 				final FixtureDef boxFixtureDef = PhysicsFactory
 						.createFixtureDef(0.0f, 0.0f, 0.0f);
@@ -472,13 +496,13 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private void makeJump() {
 		Log.v("FEBI", "JUMPING!!!!");
 		// Log.v("FEBI", String.valueOf(isPlayerJuming));
-		if (true) {
+		if (this.enableJumping) {
 			if (lastdirection == PlayerDirection.RIGHT)
 				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x + 5, -10));
+						.getLinearVelocity().x, -10));
 			else if (lastdirection == PlayerDirection.LEFT)
 				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x - 5, -10));
+						.getLinearVelocity().x, -10));
 		}
 
 	}
@@ -487,7 +511,41 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	public void beginContact(final Contact contact) {
 		// TODO Auto-generated method stub
 
-		//Log.v("FEBI", "beginContact()");
+		Log.v("FEBI", "beginContact()");
+		
+		//if(contact.getFixtureA().getBody().getUserData()!=null)
+		// Log.v("FEBI", contact.getFixtureA().getBody().getUserData().toString());
+		
+		//if(contact.getFixtureB().getBody().getUserData()!=null)
+		//Log.v("FEBI", contact.getFixtureB().getBody().getUserData().toString());
+		
+		
+		if(contact.getFixtureB().getUserData()!=null) {
+			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
+			if(contact.getFixtureB().getUserData().toString()=="PlayerFeet")
+				this.numFootContacts++;
+		}
+		if(contact.getFixtureA().getUserData()!=null) {
+			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
+			if(contact.getFixtureA().getUserData().toString()=="PlayerFeet")
+				this.numFootContacts++;
+		}
+		/*
+		int numPoints = contact.getWorldManifold().getNumberOfContactPoints();
+		Vector2[] vec = contact.getWorldManifold().getPoints();
+		float maxYF=0;
+		for (int i = 0; i < (numPoints); i++) {
+			maxYF=(vec[i].y>maxYF)?vec[i].y:maxYF;
+		}
+		if(contact.getFixtureA().getBody().getTransform().getPosition().y>=maxYF)  {
+			this.enableJumping=true;
+			this.contactToNotGround=false;
+			Log.v("FEBI", "GROUND!!!  "+contact.getFixtureA().getBody().getTransform().getPosition().y+"  "+maxYF);
+		} else 
+			this.contactToNotGround=true;
+		*/
+		// Log.v("FEBI", "beginContact()");
+	/*
 
 		Sprite a, b;
 		if ((a = (Sprite) contact.getFixtureA().getBody().getUserData()) != null)
@@ -506,7 +564,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 					BombsToDelete.add(contact.getFixtureB().getBody());
 					Log.v("FEBI", "Object B added to remove sheduler!");
 				}
-
+*/
 		// System.gc();
 
 	}
@@ -514,8 +572,38 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	@Override
 	public void endContact(Contact contact) {
 		// TODO Auto-generated method stub
-		// Log.v("FEBI", "endContact()");
-
+		Log.v("FEBI", "endContact()");
+		
+		if(contact.getFixtureB().getUserData()!=null) {
+			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
+			if(contact.getFixtureB().getUserData().toString()=="PlayerFeet")
+				this.numFootContacts--;
+		}
+		if(contact.getFixtureA().getUserData()!=null) {
+			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
+			if(contact.getFixtureA().getUserData().toString()=="PlayerFeet")
+				this.numFootContacts--;
+		}
+		
+		
+		//int numPoints = contact.getWorldManifold().getNumberOfContactPoints();
+		//if(!this.contactToNotGround)
+		//	this.enableJumping=false;
+		/*
+		Vector2[] vec = contact.getWorldManifold().getPoints();
+		float maxYF=0;
+		for (int i = 0; i < (numPoints); i++) {
+			Log.v("FEBI",vec[i].x+"  "+vec[i].y);
+			maxYF=(vec[i].y>maxYF)?vec[i].y:maxYF;
+		}
+		if(contact.getFixtureA().getBody().getTransform().getPosition().y>=maxYF)  {
+			//this.enableJumping=false;
+			Log.v("FEBI", "GROUND!!!  "+contact.getFixtureA().getBody().getTransform().getPosition().y+"  "+maxYF);
+		} else {
+			
+			//this.enableJumping=true;
+		}
+		*/
 	}
 
 	@Override
