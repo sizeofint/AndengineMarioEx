@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="400" height="21" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tileset3" tilewidth="32" tileheight="32">
+  <image source="mmap/tileset3.png" width="512" height="256"/>
+ </tileset>
+ <layer name="BG" width="400" height="21">
+  <data encoding="base64" compression="zlib">
+   eJztw0ENAAAMA6Grf9PzsDckrJqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj4flRYg0Q==
+  </data>
+ </layer>
+ <layer name="OBJ" width="400" height="21">
+  <data encoding="base64" compression="zlib">
+   eJzt2kFqwlAUQFGhWmrtrLZodRvS7qDdgAsp7h/6BhVCMPL/02Ak58AdhJDETPL4iZMJAADAcDxE02gWPd74twBwP16jZfQWvVccZ+4AkJGdOwBQyloFYFyu9dy3VgEYF899AAAgwzcIADK8iwKgT5euU/YdZVzzXAD069J1Sukzv2ROmR8Aw9DHN5BdoxrepwHcD89sAIbO/70AOKr5BlGz1jn8BwClDq0ydicC4HY+o6/G9lM0j56jRfRScI5zx7RnR9cMyVy3qX0ftfsBqPMd/TS2V9E6+og20bbgHF3HdM2OUzMkc91z91G7H2BsfiVJSvQHgUXMxg==
+  </data>
+ </layer>
+ <objectgroup name="Unwalkable" width="400" height="21">
+  <object name="ground" x="0" y="641" width="12799" height="30"/>
+  <object x="641" y="512" width="92" height="31"/>
+  <object x="801" y="417" width="92" height="29"/>
+  <object x="929" y="352" width="190" height="62"/>
+  <object x="1248" y="608" width="255" height="31"/>
+  <object x="1281" y="577" width="190" height="31"/>
+  <object x="1312" y="544" width="127" height="31"/>
+  <object x="1345" y="512" width="62" height="31"/>
+  <object x="1536" y="351" width="191" height="63"/>
+  <object x="1856" y="544" width="159" height="31"/>
+  <object x="528" y="595" width="32" height="46"/>
+  <object x="525" y="576" width="39" height="18"/>
+  <object x="2127" y="596" width="34" height="45"/>
+  <object x="2124" y="576" width="39" height="19"/>
+  <object x="2384" y="596" width="33" height="43"/>
+  <object x="2380" y="576" width="39" height="19"/>
+  <object name="LEFTWALL" x="1" y="1" width="5" height="640"/>
+  <object name="SKYWALL" x="3" y="0" width="12796" height="5"/>
+  <object name="RIGHTWALL" x="12793" y="3" width="5" height="641"/>
+ </objectgroup>
+</map>
