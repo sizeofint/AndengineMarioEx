@@ -58,12 +58,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-<<<<<<< HEAD
-//import org.andengine.engine.camera.hud.controls.DigitalOnScreenControl;
-
-//import org.andengine.examples.EaseFunctionExample;
-=======
->>>>>>> World, sprite & sound changes
 
 public class Game extends SimpleBaseGameActivity implements ContactListener {
 
@@ -84,19 +78,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 	private BitmapTextureAtlas mBitmapTextureAtlas;
 	private TiledTextureRegion mPlayerTextureRegion;
-<<<<<<< HEAD
-
-	/* Hop Button */
-	private BitmapTextureAtlas hopButtonAtlas;
-	private TextureRegion tiledTextureHop;
-	/* Hop Button */
-
-	private ArrayList<Rectangle> walls = new ArrayList<Rectangle>();
-
-	private ArrayList<Body> BombsToDelete = new ArrayList<Body>();
-
-=======
->>>>>>> World, sprite & sound changes
 	private TMXTiledMap mTMXTiledMap;
 	protected int mCactusCount;
 	Scene scene;
@@ -108,7 +89,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	public enum PlayerDirection {
 		LEFT, RIGHT, DOWN, UP, NONE;
 	}
-	private Boolean enableJumping=true;
 
 	PlayerDirection lastdirection = PlayerDirection.UP;
 
@@ -117,10 +97,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas rightarrowButtonAtlas;
 	private TextureRegion tiledTexturerightarrow;
 	private Music mMusic;
-<<<<<<< HEAD
-	private int numFootContacts=0;
-	
-=======
 	private int numFootContacts = 0;
 	private Boolean isMoveing = false;
 	private Boolean isJumping = false;
@@ -128,7 +104,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private TextureRegion tiledTextureJump;
 	private Sound mJumpSound;
 
->>>>>>> World, sprite & sound changes
 	@Override
 	public EngineOptions onCreateEngineOptions() {
 
@@ -152,48 +127,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 	@Override
 	public void onCreateResources() {
-<<<<<<< HEAD
-		// BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("mmap/");
-
-		/* mario */
-		this.mBitmapTextureAtlas = new BitmapTextureAtlas(
-				this.getTextureManager(), 150, 66, TextureOptions.DEFAULT);
-		this.mPlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createTiledFromAsset(this.mBitmapTextureAtlas, this,
-						"mario.png", 0, 0, 10, 2);
-
-		this.mBitmapTextureAtlas.load();
-
-		/* leftarrow button */
-		this.leftarrowButtonAtlas = new BitmapTextureAtlas(
-				this.getTextureManager(), 50, 50, TextureOptions.BILINEAR);
-		this.tiledTextureleftarrow = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.leftarrowButtonAtlas, this,
-						"leftarrow.png", 0, 0);
-
-		this.leftarrowButtonAtlas.load();
-		/* leftarrow button */
-
-		/* rightarrow button */
-		this.rightarrowButtonAtlas = new BitmapTextureAtlas(
-				this.getTextureManager(), 50, 50, TextureOptions.BILINEAR);
-		this.tiledTexturerightarrow = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.rightarrowButtonAtlas, this,
-						"rightarrow.png", 0, 0);
-
-		this.rightarrowButtonAtlas.load();
-		/* rightarrow button */
-
-		/* Hop button */
-		this.hopButtonAtlas = new BitmapTextureAtlas(this.getTextureManager(),
-				96, 96, TextureOptions.BILINEAR);
-		this.tiledTextureHop = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(this.hopButtonAtlas, this, "jumpbutton.png",
-						0, 0);
-
-		this.hopButtonAtlas.load();
-		/* Hop button */
-=======
 
 		try {
 			/* mario */
@@ -237,7 +170,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
->>>>>>> World, sprite & sound changes
 
 		try {
 			this.mMusic = MusicFactory.createMusicFromAsset(
@@ -303,10 +235,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		player = new AnimatedSprite(200, 400, this.mPlayerTextureRegion,
 				this.getVertexBufferObjectManager());
 		this.mBoundChaseCamera.setChaseEntity(player);
-<<<<<<< HEAD
-		
-=======
->>>>>>> World, sprite & sound changes
 
 		this.mMusic.play();
 
@@ -321,17 +249,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent,
 					final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-<<<<<<< HEAD
-
-				if (pSceneTouchEvent.isActionDown()) {
-					Log.v("FEBI", "HOP DOWN!!!!");
-					if(Game.this.numFootContacts>0)
-						Game.this.makeJump();
-				} else if (pSceneTouchEvent.isActionUp()) {
-					Log.v("FEBI", "HOP UP!!!!");
-					//mPlayerBody.setLinearVelocity(0, 0);
-					//Game.this.playerIsjumping=false;
-=======
 
 				if (pSceneTouchEvent.isActionDown()) {
 
@@ -339,7 +256,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 						Game.this.jump();
 				} else if (pSceneTouchEvent.isActionUp()) {
 
->>>>>>> World, sprite & sound changes
 				}
 				return true;
 			};
@@ -359,17 +275,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 					lastdirection = PlayerDirection.LEFT;
 
 					if (!player.isAnimationRunning())
-<<<<<<< HEAD
-						player.animate(new long[] { 100, 100, 100, 100, 100,
-								100, 100, 100, 100, 100 }, 10, 19, true);
-					// lastdirection = direction;
-					
-					
-					
-=======
 						player.animate(new long[] { 200, 200, 200 }, 7, 9, true);
 
->>>>>>> World, sprite & sound changes
 					mPlayerBody.setLinearVelocity(-1 * PLAYER_VELOCITY, 0);
 
 				} else if (pSceneTouchEvent.isActionUp()) {
@@ -399,15 +306,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 					lastdirection = PlayerDirection.RIGHT;
 
 					if (!player.isAnimationRunning())
-<<<<<<< HEAD
-						player.animate(new long[] { 100, 100, 100, 100, 100,
-								100, 100, 100, 100, 100 }, 0, 9, true);
-					// lastdirection = direction;
-					
-=======
 						player.animate(new long[] { 200, 200, 200 }, 1, 3, true);
 
->>>>>>> World, sprite & sound changes
 					mPlayerBody.setLinearVelocity(1 * PLAYER_VELOCITY, 0);
 
 				} else if (pSceneTouchEvent.isActionUp()) {
@@ -436,27 +336,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 		final FixtureDef playerFixtureDef = PhysicsFactory.createFixtureDef(0f,
 				0f, 0f);
-<<<<<<< HEAD
-		
-		
-		
-		
-		mPlayerBody = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player,
-				BodyType.DynamicBody, playerFixtureDef);
-	
-		//mPlayerBody.setUserData("PlayerBody");
-		
-		final PolygonShape mPoly = new PolygonShape();
-		mPoly.setAsBox(.1f,.1f, new Vector2(0,.5f),0);
-		final FixtureDef pFixtureDef = PhysicsFactory.createFixtureDef(0f, 0f, 0f,true); //not physic feet
-		pFixtureDef.shape = mPoly;
-		Fixture mFeet = mPlayerBody.createFixture(pFixtureDef);
-		mFeet.setUserData("PlayerFeet");
-		
-		mPoly.dispose();
-		
-		
-=======
 
 		mPlayerBody = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player,
 				BodyType.DynamicBody, playerFixtureDef);
@@ -471,7 +350,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 		mPoly.dispose();
 
->>>>>>> World, sprite & sound changes
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(
 				player, mPlayerBody, true, false) {
 			@Override
@@ -519,7 +397,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 			}
 		});
-		//scene.attachChild(new DebugRenderer(mPhysicsWorld, getVertexBufferObjectManager()));
 
 		return scene;
 	}
@@ -532,8 +409,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				final Rectangle rect = new Rectangle(object.getX(),
 						object.getY(), object.getWidth(), object.getHeight(),
 						this.getVertexBufferObjectManager());
-				
-				
 
 				final FixtureDef boxFixtureDef = PhysicsFactory
 						.createFixtureDef(0.0f, 0.0f, 0.0f);
@@ -569,23 +444,9 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		}
 	}
 
-<<<<<<< HEAD
-	private void makeJump() {
-		Log.v("FEBI", "JUMPING!!!!");
-		// Log.v("FEBI", String.valueOf(isPlayerJuming));
-		if (this.enableJumping) {
-			if (lastdirection == PlayerDirection.RIGHT)
-				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x, -10));
-			else if (lastdirection == PlayerDirection.LEFT)
-				mPlayerBody.setLinearVelocity(new Vector2(mPlayerBody
-						.getLinearVelocity().x, -10));
-		}
-=======
 	public void jumpingStart() {
 		this.isJumping = true;
 	}
->>>>>>> World, sprite & sound changes
 
 	public void jumpingEnd() {
 		this.isJumping = false;
@@ -611,62 +472,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		// TODO Auto-generated method stub
 
 		Log.v("FEBI", "beginContact()");
-<<<<<<< HEAD
-		
-		//if(contact.getFixtureA().getBody().getUserData()!=null)
-		// Log.v("FEBI", contact.getFixtureA().getBody().getUserData().toString());
-		
-		//if(contact.getFixtureB().getBody().getUserData()!=null)
-		//Log.v("FEBI", contact.getFixtureB().getBody().getUserData().toString());
-		
-		
-		if(contact.getFixtureB().getUserData()!=null) {
-			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
-			if(contact.getFixtureB().getUserData().toString()=="PlayerFeet")
-				this.numFootContacts++;
-		}
-		if(contact.getFixtureA().getUserData()!=null) {
-			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
-			if(contact.getFixtureA().getUserData().toString()=="PlayerFeet")
-				this.numFootContacts++;
-		}
-		/*
-		int numPoints = contact.getWorldManifold().getNumberOfContactPoints();
-		Vector2[] vec = contact.getWorldManifold().getPoints();
-		float maxYF=0;
-		for (int i = 0; i < (numPoints); i++) {
-			maxYF=(vec[i].y>maxYF)?vec[i].y:maxYF;
-		}
-		if(contact.getFixtureA().getBody().getTransform().getPosition().y>=maxYF)  {
-			this.enableJumping=true;
-			this.contactToNotGround=false;
-			Log.v("FEBI", "GROUND!!!  "+contact.getFixtureA().getBody().getTransform().getPosition().y+"  "+maxYF);
-		} else 
-			this.contactToNotGround=true;
-		*/
-		// Log.v("FEBI", "beginContact()");
-	/*
-
-		Sprite a, b;
-		if ((a = (Sprite) contact.getFixtureA().getBody().getUserData()) != null)
-			if (a.getUserData() != null)
-				if (a.getUserData().equals("BOMBA")
-						&& !BombsToDelete.contains(contact.getFixtureA()
-								.getBody())) {
-					BombsToDelete.add(contact.getFixtureA().getBody());
-					Log.v("FEBI", "Object A added to remove sheduler!");
-				}
-		if ((b = (Sprite) contact.getFixtureB().getBody().getUserData()) != null)
-			if (b.getUserData() != null)
-				if (b.getUserData().equals("BOMBA")
-						&& !BombsToDelete.contains(contact.getFixtureB()
-								.getBody())) {
-					BombsToDelete.add(contact.getFixtureB().getBody());
-					Log.v("FEBI", "Object B added to remove sheduler!");
-				}
-*/
-		// System.gc();
-=======
 
 		if (contact.getFixtureB().getUserData() != null) {
 			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
@@ -680,47 +485,11 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		}
 		if (this.numFootContacts > 0)
 			this.jumpingEnd();
->>>>>>> World, sprite & sound changes
 
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-<<<<<<< HEAD
-		// TODO Auto-generated method stub
-		Log.v("FEBI", "endContact()");
-		
-		if(contact.getFixtureB().getUserData()!=null) {
-			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
-			if(contact.getFixtureB().getUserData().toString()=="PlayerFeet")
-				this.numFootContacts--;
-		}
-		if(contact.getFixtureA().getUserData()!=null) {
-			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
-			if(contact.getFixtureA().getUserData().toString()=="PlayerFeet")
-				this.numFootContacts--;
-		}
-		
-		
-		//int numPoints = contact.getWorldManifold().getNumberOfContactPoints();
-		//if(!this.contactToNotGround)
-		//	this.enableJumping=false;
-		/*
-		Vector2[] vec = contact.getWorldManifold().getPoints();
-		float maxYF=0;
-		for (int i = 0; i < (numPoints); i++) {
-			Log.v("FEBI",vec[i].x+"  "+vec[i].y);
-			maxYF=(vec[i].y>maxYF)?vec[i].y:maxYF;
-		}
-		if(contact.getFixtureA().getBody().getTransform().getPosition().y>=maxYF)  {
-			//this.enableJumping=false;
-			Log.v("FEBI", "GROUND!!!  "+contact.getFixtureA().getBody().getTransform().getPosition().y+"  "+maxYF);
-		} else {
-			
-			//this.enableJumping=true;
-		}
-		*/
-=======
 		Log.v("FEBI", "endContact()");
 
 		if (contact.getFixtureB().getUserData() != null) {
@@ -736,7 +505,6 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		if (this.numFootContacts < 1)
 			this.jumpingStart();
 
->>>>>>> World, sprite & sound changes
 	}
 
 	@Override
