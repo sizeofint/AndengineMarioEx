@@ -103,6 +103,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas jumpButtonAtlas;
 	private TextureRegion tiledTextureJump;
 	private Sound mJumpSound;
+	
 
 	@Override
 	public EngineOptions onCreateEngineOptions() {
@@ -375,13 +376,18 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				int tilemapheight = mTMXTiledMap.getTileHeight()
 						* mTMXTiledMap.getTileRows();
 
-				float y = (player.getY() > (tilemapheight - (CAMERA_HEIGHT / 2))) ? (tilemapheight - (CAMERA_HEIGHT / 2))
-						: ((player.getY() < (CAMERA_HEIGHT / 2)) ? (CAMERA_HEIGHT / 2)
-								: player.getY());
+				//float y = (player.getY() > (tilemapheight - (CAMERA_HEIGHT / 2))) ? (tilemapheight - (CAMERA_HEIGHT / 2))
+				//		: ((player.getY() < (CAMERA_HEIGHT / 2)) ? (CAMERA_HEIGHT / 2)
+				//				: player.getY());
 
-				y = (tilemapheight - (CAMERA_HEIGHT / 2));
-
-				e.setPosition(player.getX(), y);
+				float y = (tilemapheight - (CAMERA_HEIGHT / 2));
+				
+				//Log.v("FEBI",String.valueOf(player.getX()));
+				if(player.getX()>(CAMERA_WIDTH/2))
+					e.setPosition(player.getX(), y);
+				else
+					e.setPosition((CAMERA_WIDTH/2), y);
+				
 				mBoundChaseCamera.setChaseEntity(e);
 
 				final MoveModifier modifier = new MoveModifier(30, e.getX(),
