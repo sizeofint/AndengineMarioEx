@@ -65,8 +65,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	// Constants
 	// ===========================================================
 
-	private static final int CAMERA_WIDTH = 1280;
-	private static final int CAMERA_HEIGHT = 750;
+	private static final int CAMERA_WIDTH = 960;
+	private static final int CAMERA_HEIGHT = 540;
 	private static final int PLAYER_VELOCITY = 1;
 
 	// ===========================================================
@@ -262,7 +262,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			};
 		};
 
-		final Sprite leftArrowButton = new Sprite(0, CAMERA_HEIGHT
+		final Sprite leftArrowButton = new Sprite(15, CAMERA_HEIGHT
 				- this.tiledTextureleftarrow.getHeight() - 30,
 				this.tiledTextureleftarrow, this.getVertexBufferObjectManager()) {
 
@@ -294,7 +294,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		};
 
 		final Sprite rightArrowButton = new Sprite(
-				this.tiledTextureleftarrow.getWidth() + 30, CAMERA_HEIGHT
+				this.tiledTextureleftarrow.getWidth() + (60+15), CAMERA_HEIGHT
 						- this.tiledTextureleftarrow.getHeight() - 30,
 				this.tiledTexturerightarrow,
 				this.getVertexBufferObjectManager()) {
