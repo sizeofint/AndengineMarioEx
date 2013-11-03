@@ -11,6 +11,8 @@ If, any questions about Andengine go to http://www.andengine.org/forums/
 
 
 
-Demo:
+Download apk: http://www.mediafire.com/download/v51o5umu1aiqq6i/AndengineMarioEx.apk
 
+
+Demo video:
 http://youtu.be/xuz7BO8lJVQ
