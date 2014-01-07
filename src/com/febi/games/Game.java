@@ -1,6 +1,8 @@
 package com.febi.games;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
@@ -24,6 +26,7 @@ import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.util.FPSLogger;
+import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -51,15 +54,11 @@ import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class Game extends SimpleBaseGameActivity implements ContactListener {
+public class Game extends SimpleBaseGameActivity {
 
 	// ===========================================================
 	// Constants
@@ -75,16 +74,15 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	AnimatedSprite player;
 	Boolean isPlayerJuming = false;
 	private BoundCamera mBoundChaseCamera;
-
+	private ArrayList<Enemy> eNemyes = new ArrayList<Enemy>();
+	public CopyOnWriteArrayList<Fireball> fireballContaner = new CopyOnWriteArrayList<Fireball>();
 	private BitmapTextureAtlas mBitmapTextureAtlas;
 	private TiledTextureRegion mPlayerTextureRegion;
 	private TMXTiledMap mTMXTiledMap;
-	protected int mCactusCount;
 	Scene scene;
 	private PhysicsWorld mPhysicsWorld;
 
 	private Body mPlayerBody;
-	Sprite aircraf;
 
 	public enum PlayerDirection {
 		LEFT, RIGHT, DOWN, UP, NONE;
@@ -97,13 +95,19 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 	private BitmapTextureAtlas rightarrowButtonAtlas;
 	private TextureRegion tiledTexturerightarrow;
 	private Music mMusic;
-	private int numFootContacts = 0;
+	public int numFootContacts = 0;
 	private Boolean isMoveing = false;
 	private Boolean isJumping = false;
 	private BitmapTextureAtlas jumpButtonAtlas;
 	private TextureRegion tiledTextureJump;
 	private Sound mJumpSound;
-	
+	private TiledTextureRegion mEnemyTextureRegion;
+	private BitmapTextureAtlas enemyBitmapTextureAtlas;
+	private BitmapTextureAtlas fireballBitmapTextureAtlas;
+	private TiledTextureRegion mfireballTextureRegion;
+	private BitmapTextureAtlas shootButtonAtlas;
+	private TextureRegion tiledTextureshoot;
+	protected Body mfireballBody;
 
 	@Override
 	public EngineOptions onCreateEngineOptions() {
@@ -137,6 +141,25 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 					.createTiledFromAsset(this.mBitmapTextureAtlas, this,
 							"mario2.png", 0, 0, 6, 2);
 			this.mBitmapTextureAtlas.load();
+			/* mario */
+
+			/* fireball */
+			this.fireballBitmapTextureAtlas = new BitmapTextureAtlas(
+					this.getTextureManager(), 72, 9, TextureOptions.DEFAULT);
+			this.mfireballTextureRegion = BitmapTextureAtlasTextureRegionFactory
+					.createTiledFromAsset(this.fireballBitmapTextureAtlas,
+							this, "fireball.png", 0, 0, 8, 1);
+			this.fireballBitmapTextureAtlas.load();
+			/* fireball */
+
+			/* Enemy */
+			this.enemyBitmapTextureAtlas = new BitmapTextureAtlas(
+					this.getTextureManager(), 54, 16, TextureOptions.DEFAULT);
+			this.mEnemyTextureRegion = BitmapTextureAtlasTextureRegionFactory
+					.createTiledFromAsset(this.enemyBitmapTextureAtlas, this,
+							"mario_dog_sprite.png", 0, 0, 3, 1);
+			this.enemyBitmapTextureAtlas.load();
+			/* Enemy */
 
 			/* leftarrow button */
 			this.leftarrowButtonAtlas = new BitmapTextureAtlas(
@@ -167,6 +190,17 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 			this.jumpButtonAtlas.load();
 			/* jump button */
+
+			/* shoot button */
+			this.shootButtonAtlas = new BitmapTextureAtlas(
+					this.getTextureManager(), 96, 96, TextureOptions.BILINEAR);
+			this.tiledTextureshoot = BitmapTextureAtlasTextureRegionFactory
+					.createFromAsset(this.shootButtonAtlas, this,
+							"shootbutton.png", 0, 0);
+
+			this.shootButtonAtlas.load();
+			/* shoot button */
+
 		} catch (IllegalArgumentException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -198,11 +232,12 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		hud.setTouchAreaBindingOnActionDownEnabled(true);
 		hud.setTouchAreaBindingOnActionMoveEnabled(true);
 
-		this.mPhysicsWorld = new PhysicsWorld(new Vector2(0f, 9.8f), false);
-		this.mPhysicsWorld.setContactListener(this);
-		mPhysicsWorld.setAutoClearForces(true);
+		this.setmPhysicsWorld(new PhysicsWorld(new Vector2(0f, 9.8f), false));
+		this.getmPhysicsWorld().setContactListener(
+				new GameContactListener(this));
+		getmPhysicsWorld().setAutoClearForces(true);
 
-		scene.registerUpdateHandler(this.mPhysicsWorld);
+		scene.registerUpdateHandler(this.getmPhysicsWorld());
 
 		try {
 			final TMXLoader tmxLoader = new TMXLoader(this.getAssets(),
@@ -232,6 +267,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		}
 
 		this.createUnwalkableObjects(mTMXTiledMap);
+		this.createEnemyObjects(mTMXTiledMap);
 
 		player = new AnimatedSprite(200, 400, this.mPlayerTextureRegion,
 				this.getVertexBufferObjectManager());
@@ -258,6 +294,61 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 				} else if (pSceneTouchEvent.isActionUp()) {
 
 				}
+				return true;
+			};
+		};
+
+		final Sprite shootButton = new Sprite(CAMERA_WIDTH - 50
+				- this.tiledTextureshoot.getWidth(), CAMERA_HEIGHT
+				- this.tiledTextureJump.getHeight()
+				- this.tiledTextureshoot.getHeight() - 60,
+				this.tiledTextureshoot, this.getVertexBufferObjectManager()) {
+			@Override
+			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent,
+					final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+
+				if (pSceneTouchEvent.isActionDown()) {
+
+					Log.v("FEBI2", String.valueOf(Game.this.player.getX())
+							+ ' ' + String.valueOf(Game.this.player.getY()));
+					if (Game.this.lastdirection == PlayerDirection.RIGHT
+							|| Game.this.lastdirection == PlayerDirection.LEFT) {
+						if (Game.this.lastdirection == PlayerDirection.RIGHT) {
+							Game.this.getmPhysicsWorld().postRunnable(
+									new Runnable() {
+										public void run() {
+											Fireball fireball = new Fireball(
+													(Game.this.player.getX() + 18),
+													(Game.this.player.getY() + 5),
+													Game.this.mfireballTextureRegion,
+													Game.this
+															.getVertexBufferObjectManager(),
+													Game.this);
+										}
+									});
+
+						} else if (Game.this.lastdirection == PlayerDirection.LEFT) {
+							Game.this.getmPhysicsWorld().postRunnable(
+									new Runnable() {
+										public void run() {
+											Fireball fireball = new Fireball(
+													(Game.this.player.getX() - 8),
+													(Game.this.player.getY() + 5),
+													Game.this.mfireballTextureRegion,
+													Game.this.getVertexBufferObjectManager(),
+													Game.this);
+										}
+									});
+						}
+
+						Log.v("FEBI2",
+								"fireballContaner size: "
+										+ String.valueOf(Game.this.fireballContaner
+												.size()));
+					}
+
+				}
+
 				return true;
 			};
 		};
@@ -294,8 +385,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		};
 
 		final Sprite rightArrowButton = new Sprite(
-				this.tiledTextureleftarrow.getWidth() + (60+15), CAMERA_HEIGHT
-						- this.tiledTextureleftarrow.getHeight() - 30,
+				this.tiledTextureleftarrow.getWidth() + (60 + 15),
+				CAMERA_HEIGHT - this.tiledTextureleftarrow.getHeight() - 30,
 				this.tiledTexturerightarrow,
 				this.getVertexBufferObjectManager()) {
 			@Override
@@ -326,10 +417,12 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		};
 
 		hud.attachChild(jumpButton);
+		hud.attachChild(shootButton);
 		hud.attachChild(leftArrowButton);
 		hud.attachChild(rightArrowButton);
 
 		hud.registerTouchArea(jumpButton);
+		hud.registerTouchArea(shootButton);
 		hud.registerTouchArea(leftArrowButton);
 		hud.registerTouchArea(rightArrowButton);
 
@@ -338,11 +431,13 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		final FixtureDef playerFixtureDef = PhysicsFactory.createFixtureDef(0f,
 				0f, 0f);
 
-		mPlayerBody = PhysicsFactory.createBoxBody(this.mPhysicsWorld, player,
-				BodyType.DynamicBody, playerFixtureDef);
+		mPlayerBody = PhysicsFactory.createBoxBody(this.getmPhysicsWorld(),
+				player, BodyType.DynamicBody, playerFixtureDef);
+
+		mPlayerBody.setUserData("player");
 
 		final PolygonShape mPoly = new PolygonShape();
-		mPoly.setAsBox(.1f, .1f, new Vector2(0, .5f), 0);
+		mPoly.setAsBox(.2f, .2f, new Vector2(0, .5f), 0);
 		final FixtureDef pFixtureDef = PhysicsFactory.createFixtureDef(0f, 0f,
 				0f, true);
 		pFixtureDef.shape = mPoly;
@@ -351,14 +446,8 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 		mPoly.dispose();
 
-		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(
-				player, mPlayerBody, true, false) {
-			@Override
-			public void onUpdate(float pSecondsElapsed) {
-				super.onUpdate(pSecondsElapsed);
-				// mBoundChaseCamera.updateChaseEntity();
-			}
-		});
+		this.getmPhysicsWorld().registerPhysicsConnector(
+				new PhysicsConnector(player, mPlayerBody, true, false));
 
 		scene.attachChild(player);
 
@@ -369,25 +458,74 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 			@Override
 			public void onUpdate(final float pSecondsElapsed) {
-				mPhysicsWorld.onUpdate(pSecondsElapsed);
+				getmPhysicsWorld().onUpdate(pSecondsElapsed);
 
 				Entity e = new Entity();
 
 				int tilemapheight = mTMXTiledMap.getTileHeight()
 						* mTMXTiledMap.getTileRows();
 
-				//float y = (player.getY() > (tilemapheight - (CAMERA_HEIGHT / 2))) ? (tilemapheight - (CAMERA_HEIGHT / 2))
-				//		: ((player.getY() < (CAMERA_HEIGHT / 2)) ? (CAMERA_HEIGHT / 2)
-				//				: player.getY());
+				// float y = (player.getY() > (tilemapheight - (CAMERA_HEIGHT /
+				// 2))) ? (tilemapheight - (CAMERA_HEIGHT / 2))
+				// : ((player.getY() < (CAMERA_HEIGHT / 2)) ? (CAMERA_HEIGHT /
+				// 2)
+				// : player.getY());
 
 				float y = (tilemapheight - (CAMERA_HEIGHT / 2));
-				
-				//Log.v("FEBI",String.valueOf(player.getX()));
-				if(player.getX()>(CAMERA_WIDTH/2))
+
+				// Log.v("FEBI",String.valueOf(player.getX()));
+				if (player.getX() > (CAMERA_WIDTH / 2))
 					e.setPosition(player.getX(), y);
 				else
-					e.setPosition((CAMERA_WIDTH/2), y);
-				
+					e.setPosition((CAMERA_WIDTH / 2), y);
+
+				// check nearby enemyes :)
+
+				// float cameraAreaWidth = CAMERA_WIDTH;
+				// float cameraAreaheight =tilemapheight;
+				// float cameraArea= cameraAreaWidth*cameraAreaheight;
+				// Log.v("FEBI",cameraAreaWidth + "  "+cameraAreaheight);
+
+				for (final Fireball dFireball : Game.this.fireballContaner) {
+					if (dFireball instanceof Fireball && dFireball != null) {
+						Game.this.runOnUpdateThread(new Runnable() {
+
+							@Override
+							public void run() {
+								dFireball.destroy();
+								fireballContaner.remove(dFireball);
+							}
+
+						});
+
+					}
+				}
+
+				for (Enemy enm : Game.this.eNemyes) {
+
+					// Log.v("FEBI",String.valueOf(enm.getEnemy().getY()));
+
+					// Log.v("FEBI",areaSums + "  "+cameraArea);
+
+					if ((e.getX() + (CAMERA_WIDTH / 2)) > enm.getEnemy().getX())
+						enm.startMoving();
+					if (enm.EnmenyTriger) {
+						// Log.v("FEBI", enm.enemyID +
+						// " - Speed: "+String.valueOf(enm.getmEnemyBody().getLinearVelocity().x));
+						if (enm.getmEnemyBody().getLinearVelocity().x == 0) {
+							enm.changeDirection();
+							enm.getmEnemyBody()
+									.setLinearVelocity(
+											(float) (Math
+													.round(enm
+															.getmEnemyBody()
+															.getLinearVelocity().x * 100.0) / 100.0),
+											0);
+						}
+
+					}
+				}
+
 				mBoundChaseCamera.setChaseEntity(e);
 
 				final MoveModifier modifier = new MoveModifier(30, e.getX(),
@@ -404,12 +542,37 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 			}
 		});
 
+		// scene.attachChild(new DebugRenderer(mPhysicsWorld,
+		// getVertexBufferObjectManager()));
+
 		return scene;
+	}
+
+	private void createEnemyObjects(TMXTiledMap mTMXTiledMap2) {
+		for (final TMXObjectGroup group : this.mTMXTiledMap
+				.getTMXObjectGroups()) {
+			// Log.v("FEBI",group.getName());
+			if (!group.getName().equals("Enemys"))
+				continue;
+			for (final TMXObject object : group.getTMXObjects()) {
+
+				Enemy enemy = new Enemy(new Vector2(object.getX(),
+						object.getY()), mEnemyTextureRegion,
+						this.getVertexBufferObjectManager(), getmPhysicsWorld());
+
+				this.eNemyes.add(enemy);
+
+				scene.attachChild(enemy.getEnemy());
+			}
+		}
 	}
 
 	private void createUnwalkableObjects(TMXTiledMap map) {
 		for (final TMXObjectGroup group : this.mTMXTiledMap
 				.getTMXObjectGroups()) {
+			// Log.v("FEBI",group.getName());
+			if (!group.getName().equals("Unwalkable"))
+				continue;
 			for (final TMXObject object : group.getTMXObjects()) {
 
 				final Rectangle rect = new Rectangle(object.getX(),
@@ -418,7 +581,7 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 
 				final FixtureDef boxFixtureDef = PhysicsFactory
 						.createFixtureDef(0.0f, 0.0f, 0.0f);
-				PhysicsFactory.createBoxBody(this.mPhysicsWorld, rect,
+				PhysicsFactory.createBoxBody(this.getmPhysicsWorld(), rect,
 						BodyType.StaticBody, boxFixtureDef);
 
 				rect.setVisible(false);
@@ -473,56 +636,12 @@ public class Game extends SimpleBaseGameActivity implements ContactListener {
 		}
 	}
 
-	@Override
-	public void beginContact(final Contact contact) {
-		// TODO Auto-generated method stub
-
-		Log.v("FEBI", "beginContact()");
-
-		if (contact.getFixtureB().getUserData() != null) {
-			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
-			if (contact.getFixtureB().getUserData().toString() == "PlayerFeet")
-				this.numFootContacts++;
-		}
-		if (contact.getFixtureA().getUserData() != null) {
-			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
-			if (contact.getFixtureA().getUserData().toString() == "PlayerFeet")
-				this.numFootContacts++;
-		}
-		if (this.numFootContacts > 0)
-			this.jumpingEnd();
-
+	public PhysicsWorld getmPhysicsWorld() {
+		return mPhysicsWorld;
 	}
 
-	@Override
-	public void endContact(Contact contact) {
-		Log.v("FEBI", "endContact()");
-
-		if (contact.getFixtureB().getUserData() != null) {
-			Log.v("FEBI", contact.getFixtureB().getUserData().toString());
-			if (contact.getFixtureB().getUserData().toString() == "PlayerFeet")
-				this.numFootContacts--;
-		}
-		if (contact.getFixtureA().getUserData() != null) {
-			Log.v("FEBI", contact.getFixtureA().getUserData().toString());
-			if (contact.getFixtureA().getUserData().toString() == "PlayerFeet")
-				this.numFootContacts--;
-		}
-		if (this.numFootContacts < 1)
-			this.jumpingStart();
-
-	}
-
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {
-		// TODO Auto-generated method stub
-
+	public void setmPhysicsWorld(PhysicsWorld mPhysicsWorld) {
+		this.mPhysicsWorld = mPhysicsWorld;
 	}
 
 }

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="400" height="21" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="tileset3" tilewidth="32" tileheight="32">
-  <image source="mmap/tileset3.png" width="512" height="256"/>
+ <tileset firstgid="1" name="tileset4" tilewidth="32" tileheight="32">
+  <image source="mmap/tileset4.png" width="512" height="512"/>
  </tileset>
  <layer name="BG" width="400" height="21">
   <data encoding="base64" compression="zlib">
    eJztw0ENAAAMA6Grf9PzsDckrJqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj4flRYg0Q==
   </data>
  </layer>
+ <layer name="OBJBG" width="400" height="21">
+  <data encoding="base64" compression="zlib">
+   eJzt2MkJgEAQRNEBlwRc8lDzz80KQQZkRnwP/r2u3aUAAAAAAAAAAAAAAAAAAAAAAADAfwxpTFOaG28B4DuWtKYt7Y23AAAA9M4PDoAafnAAPOHeAKCGewOgD0c609V6CAAA8KobuloBww==
+  </data>
+ </layer>
  <layer name="OBJ" width="400" height="21">
   <data encoding="base64" compression="zlib">
-   eJzt2kFqwlAUQFGhWmrtrLZodRvS7qDdgAsp7h/6BhVCMPL/02Ak58AdhJDETPL4iZMJAADAcDxE02gWPd74twBwP16jZfQWvVccZ+4AkJGdOwBQyloFYFyu9dy3VgEYF899AAAgwzcIADK8iwKgT5euU/YdZVzzXAD069J1Sukzv2ROmR8Aw9DHN5BdoxrepwHcD89sAIbO/70AOKr5BlGz1jn8BwClDq0ydicC4HY+o6/G9lM0j56jRfRScI5zx7RnR9cMyVy3qX0ftfsBqPMd/TS2V9E6+og20bbgHF3HdM2OUzMkc91z91G7H2BsfiVJSvQHgUXMxg==
+   eJzt2UdOw0AYhuFIlAtQbkHZIFjQdiBER+zZwRKUBSy5Au0AtAPQDkA7AO0AtHvwLRxpsBziGU88Dn4f6VWiNP/Jwr8wlQoAAAAAAAAAAAAAAAipTbWrDtUZ4P0AgNbUpbpVj+oN8P6aNHuIXQUA2f23c2maPeRrVwFAmfk6l/apfjXgYygAQGmMqXE1YTy2pJbVSpCJAAAu8r4uNafm1UJB5gEAuMlyXcrmXL9aJ5d50n6WC/YXADSfze7xec63/SybncD/zAEgLN9/F2TBTgAAhLYX3Q4aJb1mXx2oQ3WUz2gAgAI7jm4njZJec6JO1Zk6z2EuAGhFzbpWVY0qokWjuAt1qa7UtbrJcS4AKLtqLBdDCfmyZhR3q+7UvXpQjx6PCwChjUa5GFYjGY7b6LH47kizQ9bVhuUsjb7HX89vGsU9qWf1ol7Vm+VcAFBks1EuptR0dH/Gotpxk2apqbc7Gu2QbbWT4XvYPr9rFPeuPtSn+lLfld+/AQC0qi0iIiKHfgCxK/N+
   </data>
  </layer>
  <objectgroup name="Unwalkable" width="400" height="21">
@@ -33,5 +38,13 @@
   <object name="LEFTWALL" x="1" y="1" width="5" height="640"/>
   <object name="SKYWALL" x="3" y="0" width="12796" height="5"/>
   <object name="RIGHTWALL" x="12793" y="3" width="5" height="641"/>
+ </objectgroup>
+ <objectgroup name="Enemys" width="400" height="21">
+  <object name="dog" x="1379" y="494"/>
+  <object name="dog" x="1980" y="527"/>
+  <object name="dog" x="427" y="628"/>
+  <object name="dog" x="540" y="564"/>
+  <object name="dog" x="2310" y="624"/>
+  <object name="dog" x="1651" y="334"/>
  </objectgroup>
 </map>
