@@ -2,6 +2,7 @@ package com.febi.games;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.andengine.audio.music.Music;
@@ -30,6 +31,7 @@ import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.extension.tmx.TMXLoader;
 import org.andengine.extension.tmx.TMXLoader.ITMXTilePropertiesListener;
@@ -335,7 +337,8 @@ public class Game extends SimpleBaseGameActivity {
 													(Game.this.player.getX() - 8),
 													(Game.this.player.getY() + 5),
 													Game.this.mfireballTextureRegion,
-													Game.this.getVertexBufferObjectManager(),
+													Game.this
+															.getVertexBufferObjectManager(),
 													Game.this);
 										}
 									});
@@ -465,26 +468,12 @@ public class Game extends SimpleBaseGameActivity {
 				int tilemapheight = mTMXTiledMap.getTileHeight()
 						* mTMXTiledMap.getTileRows();
 
-				// float y = (player.getY() > (tilemapheight - (CAMERA_HEIGHT /
-				// 2))) ? (tilemapheight - (CAMERA_HEIGHT / 2))
-				// : ((player.getY() < (CAMERA_HEIGHT / 2)) ? (CAMERA_HEIGHT /
-				// 2)
-				// : player.getY());
-
 				float y = (tilemapheight - (CAMERA_HEIGHT / 2));
 
-				// Log.v("FEBI",String.valueOf(player.getX()));
 				if (player.getX() > (CAMERA_WIDTH / 2))
 					e.setPosition(player.getX(), y);
 				else
 					e.setPosition((CAMERA_WIDTH / 2), y);
-
-				// check nearby enemyes :)
-
-				// float cameraAreaWidth = CAMERA_WIDTH;
-				// float cameraAreaheight =tilemapheight;
-				// float cameraArea= cameraAreaWidth*cameraAreaheight;
-				// Log.v("FEBI",cameraAreaWidth + "  "+cameraAreaheight);
 
 				for (final Fireball dFireball : Game.this.fireballContaner) {
 					if (dFireball instanceof Fireball && dFireball != null) {
@@ -500,6 +489,8 @@ public class Game extends SimpleBaseGameActivity {
 
 					}
 				}
+
+				// check nearby enemyes :)
 
 				for (Enemy enm : Game.this.eNemyes) {
 
@@ -542,8 +533,8 @@ public class Game extends SimpleBaseGameActivity {
 			}
 		});
 
-		// scene.attachChild(new DebugRenderer(mPhysicsWorld,
-		// getVertexBufferObjectManager()));
+		scene.attachChild(new DebugRenderer(mPhysicsWorld,
+				getVertexBufferObjectManager()));
 
 		return scene;
 	}
@@ -566,6 +557,7 @@ public class Game extends SimpleBaseGameActivity {
 			}
 		}
 	}
+	
 
 	private void createUnwalkableObjects(TMXTiledMap map) {
 		for (final TMXObjectGroup group : this.mTMXTiledMap
@@ -581,9 +573,26 @@ public class Game extends SimpleBaseGameActivity {
 
 				final FixtureDef boxFixtureDef = PhysicsFactory
 						.createFixtureDef(0.0f, 0.0f, 0.0f);
-				PhysicsFactory.createBoxBody(this.getmPhysicsWorld(), rect,
-						BodyType.StaticBody, boxFixtureDef);
+				int[][] i2 = object
+						.getmPolyLines(PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+				
+				if (i2.length > 0) {
+					Vector2[] v2 = new Vector2[i2.length];
+					for (int i = 0; i < i2.length; i++) {
+						v2[i] = new Vector2(i2[i][0], i2[i][1]);
+					}
+					
 
+					PhysicsFactory.createChainBody(getmPhysicsWorld(), object.getX(),
+							object.getY(), v2, 0, BodyType.StaticBody,
+							PhysicsFactory.createFixtureDef(0.0f, 0.0f, 0.0f),
+							PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+				} else {
+
+					PhysicsFactory.createBoxBody(this.getmPhysicsWorld(), rect,
+							BodyType.StaticBody, boxFixtureDef);
+
+				}
 				rect.setVisible(false);
 
 				final PhysicsHandler physicsHandler = new PhysicsHandler(rect);
@@ -593,7 +602,6 @@ public class Game extends SimpleBaseGameActivity {
 
 			}
 		}
-
 	}
 
 	private void jump() {
