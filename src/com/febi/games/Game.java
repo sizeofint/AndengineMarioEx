@@ -266,6 +266,7 @@ public class Game extends SimpleBaseGameActivity {
 		for (int i = 0; i < this.mTMXTiledMap.getTMXLayers().size(); i++) {
 			TMXLayer layer = this.mTMXTiledMap.getTMXLayers().get(i);
 			scene.attachChild(layer);
+			// layer.detachSelf();
 		}
 
 		this.createUnwalkableObjects(mTMXTiledMap);
@@ -533,8 +534,8 @@ public class Game extends SimpleBaseGameActivity {
 			}
 		});
 
-		scene.attachChild(new DebugRenderer(mPhysicsWorld,
-				getVertexBufferObjectManager()));
+		// scene.attachChild(new DebugRenderer(mPhysicsWorld,
+		// getVertexBufferObjectManager()));
 
 		return scene;
 	}
@@ -557,7 +558,6 @@ public class Game extends SimpleBaseGameActivity {
 			}
 		}
 	}
-	
 
 	private void createUnwalkableObjects(TMXTiledMap map) {
 		for (final TMXObjectGroup group : this.mTMXTiledMap
@@ -573,26 +573,10 @@ public class Game extends SimpleBaseGameActivity {
 
 				final FixtureDef boxFixtureDef = PhysicsFactory
 						.createFixtureDef(0.0f, 0.0f, 0.0f);
-				int[][] i2 = object
-						.getmPolyLines(PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+				PhysicsFactory.createBoxBody(this.getmPhysicsWorld(), rect,
+						BodyType.StaticBody, boxFixtureDef);
 				
-				if (i2.length > 0) {
-					Vector2[] v2 = new Vector2[i2.length];
-					for (int i = 0; i < i2.length; i++) {
-						v2[i] = new Vector2(i2[i][0], i2[i][1]);
-					}
-					
 
-					PhysicsFactory.createChainBody(getmPhysicsWorld(), object.getX(),
-							object.getY(), v2, 0, BodyType.StaticBody,
-							PhysicsFactory.createFixtureDef(0.0f, 0.0f, 0.0f),
-							PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-				} else {
-
-					PhysicsFactory.createBoxBody(this.getmPhysicsWorld(), rect,
-							BodyType.StaticBody, boxFixtureDef);
-
-				}
 				rect.setVisible(false);
 
 				final PhysicsHandler physicsHandler = new PhysicsHandler(rect);
