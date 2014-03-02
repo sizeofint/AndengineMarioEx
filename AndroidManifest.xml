@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.febi.AndengineMarioEx"
+    package="com.sizeofint.games.marioex"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.febi.games.Game"
+            android:name="com.sizeofint.games.marioex.Game"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
             <intent-filter>

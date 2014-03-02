@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.febi.AndengineMarioEx;
+package com.sizeofint.games.marioex;
 
 public final class R {
     public static final class attr {
