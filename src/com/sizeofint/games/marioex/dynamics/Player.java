@@ -24,7 +24,7 @@ public abstract class Player extends AnimatedSprite {
 	private boolean canRun = false;
 	private int footContacts = 0;
 
-	private Action lastdirection;
+	protected Action lastdirection;
 
 	private boolean isMoving = false;
 
@@ -114,10 +114,6 @@ public abstract class Player extends AnimatedSprite {
 
 	}
 
-	public void shoot() {
-
-	}
-
 	public void jump() {
 
 		if (this.footContacts > 0) {
@@ -173,4 +169,5 @@ public abstract class Player extends AnimatedSprite {
 	}
 
 	public abstract void onDie();
+	public abstract void shoot();
 }

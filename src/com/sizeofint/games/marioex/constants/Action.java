@@ -1,5 +1,5 @@
 package com.sizeofint.games.marioex.constants;
 
 public enum Action {
-	MOVELEFT,MOVERIGHT,STOP;
+	MOVELEFT,MOVERIGHT,STOP, SHOOTRIGHT,SHOOTLEFT;
 }

@@ -28,9 +28,8 @@ import org.andengine.extension.tmx.util.exception.TMXLoadException;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.TextureOptions;
 
+import org.andengine.ui.activity.BaseGameActivity;
 import org.andengine.util.debug.Debug;
-
-
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -44,6 +43,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.sizeofint.games.marioex.base.BaseScene;
 import com.sizeofint.games.marioex.constants.Action;
 import com.sizeofint.games.marioex.constants.GameConstants;
+import com.sizeofint.games.marioex.dynamics.Bullet;
 import com.sizeofint.games.marioex.dynamics.Player;
 import com.sizeofint.games.marioex.manager.ResourcesManager;
 import com.sizeofint.games.marioex.manager.SceneManager;
@@ -152,6 +152,44 @@ public class GameScene extends BaseScene {
 			public void onDie() {
 
 			}
+
+			@Override
+			public void shoot() {
+				Bullet bullet = new Bullet(
+						((lastdirection == Action.MOVELEFT) ? (this.getX() - 8)
+								: (this.getX() + 18)), this.getY() + 5, vbom,
+						camera, physicsWorld, lastdirection) {
+
+					@Override
+					public void onDestroy() {
+
+						final Bullet bullet = this;
+
+						((BaseGameActivity) activity)
+								.runOnUpdateThread(new Runnable() {
+
+									@Override
+									public void run() {
+										physicsWorld
+												.unregisterPhysicsConnector(physicsWorld
+														.getPhysicsConnectorManager()
+														.findPhysicsConnectorByShape(
+																bullet));
+										bullet.getBody().setActive(false);
+										physicsWorld.destroyBody(bullet
+												.getBody());
+										GameScene.this.detachChild(bullet);
+									}
+
+								});
+
+					}
+
+				};
+
+				GameScene.this.attachChild(bullet);
+
+			}
 		};
 
 		attachChild(player);
@@ -168,7 +206,7 @@ public class GameScene extends BaseScene {
 	private void createHUD() {
 
 		gameHUD = new HUD();
-		
+
 		gameHUD.setTouchAreaBindingOnActionDownEnabled(true);
 		gameHUD.setTouchAreaBindingOnActionMoveEnabled(true);
 
@@ -320,6 +358,17 @@ public class GameScene extends BaseScene {
 					if (x1.getUserData().toString() == "playerFeet") {
 						player.increaseFootContacts();
 					}
+				}
+
+				if (x1.getBody().getUserData() instanceof Bullet) {
+					Bullet bu = (Bullet) x1.getBody().getUserData();
+					bu.getBody().setUserData(null);
+					bu.onDestroy();
+				}
+				if (x2.getBody().getUserData() instanceof Bullet) {
+					Bullet bu = (Bullet) x2.getBody().getUserData();
+					bu.getBody().setUserData(null);
+					bu.onDestroy();
 				}
 
 			}

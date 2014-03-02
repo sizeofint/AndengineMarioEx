@@ -15,6 +15,7 @@ import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
@@ -74,6 +75,8 @@ public class ResourcesManager {
 	public TextureRegion tiledTextureJump;
 
 	public TextureRegion tiledTextureshoot;
+
+	public TiledTextureRegion bullet_region;
 
 	
 
@@ -161,6 +164,9 @@ public class ResourcesManager {
 		
 		
 		player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "mario2.png", 6, 2);
+		
+		
+		bullet_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "fireball.png", 8, 1);
 		
 		
 		
