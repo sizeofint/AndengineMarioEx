@@ -269,8 +269,7 @@ public class GameScene extends BaseScene {
 
 					player.move(Action.MOVELEFT);
 
-				} else if (pSceneTouchEvent.isActionUp()
-						|| pSceneTouchEvent.isActionMove()) {
+				} else if (pSceneTouchEvent.isActionUp()) {
 
 					player.move(Action.STOP);
 
@@ -279,6 +278,7 @@ public class GameScene extends BaseScene {
 				return true;
 			};
 		};
+		
 
 		final Sprite rightArrowButton = new Sprite(
 				ResourcesManager.getInstance().tiledTextureleftarrow.getWidth()
@@ -295,8 +295,7 @@ public class GameScene extends BaseScene {
 
 					player.move(Action.MOVERIGHT);
 
-				} else if (pSceneTouchEvent.isActionUp()
-						|| pSceneTouchEvent.isActionMove()) {
+				} else if (pSceneTouchEvent.isActionUp()) {
 
 					player.move(Action.STOP);
 
