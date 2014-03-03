@@ -32,7 +32,7 @@ public abstract class Bullet extends AnimatedSprite {
 
 		this.animate(100);
 		this.getBody()
-				.setLinearVelocity((to == Action.MOVERIGHT) ? 50 : -50, 0);
+				.setLinearVelocity((to == Action.MOVERIGHT) ? 25 : -25, 0);
 		this.getBody().setUserData(this);
 	}
 

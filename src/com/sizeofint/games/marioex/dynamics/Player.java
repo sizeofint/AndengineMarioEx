@@ -48,9 +48,30 @@ public abstract class Player extends AnimatedSprite {
 
 		final PhysicsHandler physicsHandler = new PhysicsHandler(this);
 		this.registerUpdateHandler(physicsHandler);
+		
+		
+		
+		
+		
+		
+		
+		
+		final PolygonShape mPoly2 = new PolygonShape();
+		mPoly2.setAsBox(8f/GameConstants.PIXEL_TO_METER_RATIO_DEFAULT, 15f/GameConstants.PIXEL_TO_METER_RATIO_DEFAULT, new Vector2(0, -.09f), 0);
+		final FixtureDef pFixtureDef2 = PhysicsFactory.createFixtureDef(0f, 0f,
+				0f, true, GameConstants.CATEGORYBIT_PLAYERBODY,GameConstants.MASKBITS_PLAYERBODY, (short) 0);
+		pFixtureDef2.shape = mPoly2;
+		Fixture mPlayerbodyf = body.createFixture(pFixtureDef2);
+		mPlayerbodyf.setUserData("playerbody");
+		mPoly2.dispose();
+		
+		
+		
+		
+		
 
 		final PolygonShape mPoly = new PolygonShape();
-		mPoly.setAsBox(.4f, .2f, new Vector2(0, 1f), 0);
+		mPoly.setAsBox(.3f, .1f, new Vector2(0, .5f), 0);
 		final FixtureDef pFixtureDef = PhysicsFactory.createFixtureDef(0f, 0f,
 				0f, true, GameConstants.CATEGORYBIT_PLAYER,
 				GameConstants.MASKBITS_PLAYER, (short) 0);
@@ -117,6 +138,7 @@ public abstract class Player extends AnimatedSprite {
 	public void jump() {
 
 		if (this.footContacts > 0) {
+			ResourcesManager.getInstance().jumpSound.play();
 			this.isJumping = true;
 			if (lastdirection == Action.MOVELEFT) {
 				this.animate(new long[] { 100 }, new int[] { 11 });

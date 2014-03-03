@@ -7,6 +7,7 @@ import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
 import com.sizeofint.games.marioex.base.BaseScene;
 import com.sizeofint.games.marioex.scene.GameScene;
+import com.sizeofint.games.marioex.scene.LoadingScene;
 import com.sizeofint.games.marioex.scene.MainMenuScene;
 import com.sizeofint.games.marioex.scene.SplashScene;
 
@@ -26,6 +27,7 @@ public class SceneManager
 	private BaseScene splashScene;
 	private BaseScene menuScene;
 	private BaseScene gameScene;
+	private BaseScene loadingScene;
 	
 	//---------------------------------------------
 	// VARIABLES
@@ -71,6 +73,9 @@ public class SceneManager
 			case SCENE_SPLASH:
 				setScene(splashScene);
 				break;
+			case SCENE_LOADING:
+				setScene(loadingScene);
+				break;
 			default:
 				break;
 		}
@@ -80,6 +85,7 @@ public class SceneManager
 	{
 		ResourcesManager.getInstance().loadMenuResources();
 		menuScene = new MainMenuScene();
+		loadingScene = new LoadingScene();
         SceneManager.getInstance().setScene(menuScene);
         disposeSplashScene();
 	}
@@ -101,6 +107,7 @@ public class SceneManager
 	
 	public void loadGameScene(final Engine mEngine)
 	{
+		setScene(loadingScene);
 		ResourcesManager.getInstance().unloadMenuTextures();
 		mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() 
 		{

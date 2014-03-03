@@ -10,6 +10,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
 import com.sizeofint.games.marioex.base.BaseScene;
+import com.sizeofint.games.marioex.constants.GameConstants;
 import com.sizeofint.games.marioex.manager.SceneManager;
 import com.sizeofint.games.marioex.manager.SceneManager.SceneType;
 
@@ -73,6 +74,7 @@ public class MainMenuScene  extends BaseScene  implements IOnMenuItemClickListen
 	
 	private void createBackground()
 	{
+		
 		attachChild(new Sprite(0, 0, resourcesManager.menu_background_region, vbom)
 		{
     		@Override

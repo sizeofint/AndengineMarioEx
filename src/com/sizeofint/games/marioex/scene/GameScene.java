@@ -1,16 +1,11 @@
 package com.sizeofint.games.marioex.scene;
 
 import org.andengine.engine.camera.hud.HUD;
-
-import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.handler.physics.PhysicsHandler;
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.MoveModifier;
 import org.andengine.entity.primitive.Rectangle;
-
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -27,9 +22,11 @@ import org.andengine.extension.tmx.TMXTiledMap;
 import org.andengine.extension.tmx.util.exception.TMXLoadException;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.TextureOptions;
-
 import org.andengine.ui.activity.BaseGameActivity;
+import org.andengine.util.Constants;
 import org.andengine.util.debug.Debug;
+
+import android.util.Log;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -42,8 +39,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.sizeofint.games.marioex.base.BaseScene;
 import com.sizeofint.games.marioex.constants.Action;
+import com.sizeofint.games.marioex.constants.EnemySensors;
 import com.sizeofint.games.marioex.constants.GameConstants;
 import com.sizeofint.games.marioex.dynamics.Bullet;
+import com.sizeofint.games.marioex.dynamics.Enemy;
 import com.sizeofint.games.marioex.dynamics.Player;
 import com.sizeofint.games.marioex.manager.ResourcesManager;
 import com.sizeofint.games.marioex.manager.SceneManager;
@@ -55,6 +54,7 @@ public class GameScene extends BaseScene {
 	private TMXTiledMap mTMXTiledMap;
 	private HUD gameHUD;
 	private PhysicsWorld physicsWorld;
+	private boolean stopManagedUpdate = false;
 
 	@Override
 	public void createScene() {
@@ -62,6 +62,8 @@ public class GameScene extends BaseScene {
 		createHUD();
 		createPhysics();
 		loadLevel(1);
+
+		// attachChild(new DebugRenderer(physicsWorld,vbom));
 
 	}
 
@@ -120,6 +122,18 @@ public class GameScene extends BaseScene {
 					attachChild(rect);
 				} else if (group.getName().equals("Enemies")) {
 
+					Enemy enemy = new Enemy(object.getX(), object.getY(), vbom,
+							camera, physicsWorld) {
+
+						@Override
+						public void onDie() {
+							// TODO Auto-generated method stub
+
+						}
+					};
+
+					attachChild(enemy);
+
 				} else if (group.getName().equals("enemyunwalkable")) {
 
 					Rectangle rect2 = new Rectangle(object.getX(),
@@ -155,10 +169,12 @@ public class GameScene extends BaseScene {
 
 			@Override
 			public void shoot() {
+				float lc[] = this.convertLocalToSceneCoordinates(16, 32);
 				Bullet bullet = new Bullet(
-						((lastdirection == Action.MOVELEFT) ? (this.getX() - 8)
-								: (this.getX() + 18)), this.getY() + 5, vbom,
-						camera, physicsWorld, lastdirection) {
+						((lastdirection == Action.MOVELEFT) ? (lc[Constants.VERTEX_INDEX_X] - 5)
+								: (lc[Constants.VERTEX_INDEX_X] - 10)),
+						this.getY() + 5, vbom, camera, physicsWorld,
+						lastdirection) {
 
 					@Override
 					public void onDestroy() {
@@ -191,6 +207,8 @@ public class GameScene extends BaseScene {
 
 			}
 		};
+
+		ResourcesManager.getInstance().music.play();
 
 		attachChild(player);
 
@@ -278,7 +296,6 @@ public class GameScene extends BaseScene {
 				return true;
 			};
 		};
-		
 
 		final Sprite rightArrowButton = new Sprite(
 				ResourcesManager.getInstance().tiledTextureleftarrow.getWidth()
@@ -333,9 +350,14 @@ public class GameScene extends BaseScene {
 
 	@Override
 	public void disposeScene() {
+		this.stopManagedUpdate = true;
 		camera.setHUD(null);
-		camera.setChaseEntity(null); // TODO
-		camera.setCenter(400, 240);
+		camera.setChaseEntity(null);
+		camera.setCenter(GameConstants.CAMERA_WIDTH / 2,
+				GameConstants.CAMERA_HEIGHT / 2);
+		ResourcesManager.getInstance().music.stop();
+		this.detachSelf();
+		this.dispose();
 	}
 
 	private ContactListener contactListener() {
@@ -370,6 +392,41 @@ public class GameScene extends BaseScene {
 					bu.onDestroy();
 				}
 
+				// On ground touch or right sensor touch continue moving to
+				// left.
+				if (x1.getUserData() instanceof EnemySensors
+						&& x1.getBody().getUserData() instanceof Enemy) {
+					if (x1.getUserData() == EnemySensors.BOTTOM
+							|| x1.getUserData() == EnemySensors.RIGHT) {
+						((Enemy) x1.getBody().getUserData())
+								.move(Action.MOVELEFT);
+					}
+				}
+				if (x2.getUserData() instanceof EnemySensors
+						&& x2.getBody().getUserData() instanceof Enemy) {
+					if (x2.getUserData() == EnemySensors.BOTTOM
+							|| x2.getUserData() == EnemySensors.RIGHT) {
+						((Enemy) x2.getBody().getUserData())
+								.move(Action.MOVELEFT);
+					}
+				}
+
+				// On left sensor touch continue moving to right.
+				if (x1.getUserData() instanceof EnemySensors
+						&& x1.getBody().getUserData() instanceof Enemy) {
+					if (x1.getUserData() == EnemySensors.LEFT) {
+						((Enemy) x1.getBody().getUserData())
+								.move(Action.MOVERIGHT);
+					}
+				}
+				if (x2.getUserData() instanceof EnemySensors
+						&& x2.getBody().getUserData() instanceof Enemy) {
+					if (x2.getUserData() == EnemySensors.LEFT) {
+						((Enemy) x2.getBody().getUserData())
+								.move(Action.MOVERIGHT);
+					}
+				}
+
 			}
 
 			public void endContact(Contact contact) {
@@ -400,6 +457,8 @@ public class GameScene extends BaseScene {
 	@Override
 	public void onManagedUpdate(final float pSecondsElapsed) {
 		super.onManagedUpdate(pSecondsElapsed);
+		if (this.stopManagedUpdate)
+			return;
 		physicsWorld.onUpdate(pSecondsElapsed);
 		Entity e = new Entity();
 

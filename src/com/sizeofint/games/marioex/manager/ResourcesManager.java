@@ -1,5 +1,11 @@
 package com.sizeofint.games.marioex.manager;
 
+import java.io.IOException;
+
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
 import org.andengine.opengl.font.Font;
@@ -77,6 +83,14 @@ public class ResourcesManager {
 	public TextureRegion tiledTextureshoot;
 
 	public TiledTextureRegion bullet_region;
+
+	public TiledTextureRegion enemy_region;
+
+	public Music music;
+
+	public Sound jumpSound;
+
+	
 
 	
 
@@ -168,6 +182,8 @@ public class ResourcesManager {
 		
 		bullet_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "fireball.png", 8, 1);
 		
+		enemy_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "mario_dog_sprite.png", 3, 1);
+		
 		
 		
 		
@@ -185,11 +201,22 @@ public class ResourcesManager {
 	}
 
 	private void loadGameAudio() {
+		MusicFactory.setAssetBasePath("audio/");
+		SoundFactory.setAssetBasePath("audio/");
+		
+		try {
+			this.music = MusicFactory.createMusicFromAsset(this.engine.getMusicManager(), activity, "track1.ogg");
+			this.jumpSound = SoundFactory.createSoundFromAsset(this.engine.getSoundManager(), activity, "smb_jump-super.ogg");
+			this.music.setLooping(true);
+		} catch (final IOException e) {
+			Debug.e(e);
+		}
+
 
 	}
 
 	public void unloadGameTextures() {
-		// TODO (Since we did not create any textures for game scene yet)
+		gameTextureAtlas.unload();
 	}
 
 	public void loadSplashScreen() {

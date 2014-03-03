@@ -12,6 +12,8 @@ import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
+import android.view.KeyEvent;
+
 import com.sizeofint.games.marioex.constants.GameConstants;
 import com.sizeofint.games.marioex.manager.ResourcesManager;
 import com.sizeofint.games.marioex.manager.SceneManager;
@@ -69,6 +71,17 @@ public class Game extends SimpleBaseGameActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		System.exit(0);
+	}
+	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{  
+	    if (keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+	    	SceneManager.getInstance().getCurrentScene().onBackKeyPressed();
+	    }
+	    return false; 
 	}
 
 	

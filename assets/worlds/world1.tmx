@@ -39,7 +39,7 @@
   <object name="SKYWALL" x="3" y="0" width="12796" height="5"/>
   <object name="RIGHTWALL" x="12793" y="3" width="5" height="641"/>
  </objectgroup>
- <objectgroup name="Enemys" width="400" height="21">
+ <objectgroup name="Enemies" width="400" height="21">
   <object name="dog" x="1379" y="494"/>
   <object name="dog" x="1980" y="527"/>
   <object name="dog" x="427" y="628"/>
