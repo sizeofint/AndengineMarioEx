@@ -5,7 +5,7 @@ This is a game example similar to Super Mario Bros using Andengine.
 This is only demonstration of game development (Key features for creating 2d side-scroller platformer type game) using Andengine and I'm not going to create full game.
 Code structure of this example is taken from this tutorial: http://www.matim-dev.com/full-game-tutorial---part-1.html . 
 
-Features, that are implemented in this example
+Implemented features
 ================
 
 * Jumping
